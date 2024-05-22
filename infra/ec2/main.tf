@@ -1,7 +1,7 @@
 variable "ami_id" {}
 variable "instance_type" {}
 variable "tag_name" {}
-variable "public_key" {}
+# variable "public_key" {}
 variable "subnet_id" {}
 variable "sg_enable_ssh_https" {}
 variable "enable_public_ip_address" {}
