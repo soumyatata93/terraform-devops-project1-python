@@ -6,6 +6,11 @@ variable "mysql_username" {}
 variable "mysql_password" {}
 variable "mysql_dbname" {}
 
+
+output "rds_endpoint" {
+  value = replace(aws_db_instance.default.endpoint, ":3306", "")
+}
+
 # RDS Subnet Group
 resource "aws_db_subnet_group" "dev_proje_1_db_subnet_group" {
   name       = var.db_subnet_group_name
@@ -17,7 +22,7 @@ resource "aws_db_instance" "default" {
   storage_type            = "gp2"
   engine                  = "mysql"
   engine_version          = "8.0.34"
-  instance_class          = "db.m5d.large"
+  instance_class          = "db.t3.micro"
   identifier              = var.mysql_db_identifier
   username                = var.mysql_username
   password                = var.mysql_password
@@ -29,4 +34,6 @@ resource "aws_db_instance" "default" {
   backup_retention_period = 0
   deletion_protection     = false
 }
+
+
 

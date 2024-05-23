@@ -22,18 +22,6 @@ module "security_group" {
   ec2_sg_name_for_python_api = "SG for EC2 for enabling port 5000"
 }
 
-module "ec2" {
-  source                   = "./ec2"
-  ami_id                   = var.ec2_ami_id
-  instance_type            = "t2.micro"
-  tag_name                 = "Ubuntu Linux EC2"
-  subnet_id                = tolist(module.networking.dev_proj_1_public_subnets)[0]
-  sg_enable_ssh_https      = module.security_group.sg_ec2_sg_ssh_http_id
-  ec2_sg_name_for_python_api     = module.security_group.sg_ec2_for_python_api
-  enable_public_ip_address = true
-  user_data_install_apache = templatefile("./template/ec2_python_app.sh", {})
-}
-
 module "lb_target_group" {
   source                   = "./load-balancer-target-group"
   lb_target_group_name     = "dev-proj-1-lb-target-group"
@@ -84,4 +72,17 @@ module "rds_db_instance" {
   mysql_username       = "dbuser"
   mysql_password       = "dbpassword"
   mysql_dbname         = "devprojdb"
+}
+
+module "ec2" {
+  source                   = "./ec2"
+  ami_id                   = var.ec2_ami_id
+  instance_type            = "t2.micro"
+  tag_name                 = "Ubuntu Linux EC2"
+  subnet_id                = tolist(module.networking.dev_proj_1_public_subnets)[0]
+  sg_enable_ssh_https      = module.security_group.sg_ec2_sg_ssh_http_id
+  ec2_sg_name_for_python_api     = module.security_group.sg_ec2_for_python_api
+  enable_public_ip_address = true
+  user_data_install_apache = templatefile("./template/ec2_python_app.sh", {
+    db_host     = module.rds_db_instance.rds_endpoint})
 }

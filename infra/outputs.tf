@@ -2,6 +2,9 @@ output "dev_proj_1_vpc_id" {
   value = module.networking.dev_proj_1_vpc_id
 }
 
+output "rds_endpoint" {
+  value = module.rds_db_instance.rds_endpoint
+}
 /*output "ec2_ssh_string" {
   value = module.ec2.ssh_connection_string_for_ec2
 }
